@@ -48,7 +48,7 @@ layout = html.Div(
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=df.columns[1]
+                value=df.columns[2]
             ),
             dcc.Graph(id='heatmap'),
             dcc.Graph(id='scatterplot'),
