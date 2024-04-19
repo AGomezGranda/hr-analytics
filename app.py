@@ -3,7 +3,7 @@ from dash import Dash, html, dcc
 import pandas as pd
 
 app = Dash(__name__, use_pages=True)
-df = pd.read_csv('Data/HR_Analytics.csv')
+df = pd.read_csv('data/HR_Analytics.csv')
 
 app.layout = html.Div([
     html.Div([
@@ -27,4 +27,4 @@ app.layout = html.Div([
 )
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
