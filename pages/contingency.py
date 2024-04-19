@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 
 from scipy.stats import chi2_contingency, pearsonr, ttest_ind
 
-dash.register_page(__name__)
+dash.register_page(__name__, name='Tabla de Contingencia', order=3)
 
 data_path = 'data/HR_Analytics.csv'
 
@@ -33,25 +33,26 @@ columns = ['Attrition', 'BusinessTravel', 'Department', 'Education', 'EducationF
 layout = html.Div(
     children=[
         html.Div([
-            html.H3('Select the first column (x-axis)'),
+            html.H1('Tabla de Contingencia'),
+            html.H3('Selecciona la primera columna (eje-x)'),
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[3]
             ),
-            html.H3('Select the second column (y-axis)'),
+            html.H3('Selecciona la segunda columna (eje-y)'),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[4]
             ),
-            html.H3('Contingency Table:'),
+            html.H3('Tabla de Contingencia:'),
             dash_table.DataTable(
                 id='contingency',
                 page_size=20,
                 style_table={'overflowX': 'auto'},
             ),
-            html.H3('Coefficients:'),
+            html.H3('Coeficientes:'),
             dash_table.DataTable(
                 id='statistics',
                 page_size=20,

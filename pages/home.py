@@ -3,13 +3,13 @@ import pandas as pd
 from dash import html, dcc, dash_table
 
 
-dash.register_page(__name__, path='/')
+dash.register_page(__name__, path='/', name='Inicio', order=0)
 
 df = pd.read_csv('data/HR_Analytics.csv')
 
-layout = html.Div([
-    html.H1('This is our Home page'),
-    html.Div('This is our Home page content.'),
+layout = html.Div(
+    children=[
+    html.H1('Inicio'),
     dcc.Graph(
         id='employee-count',
         figure={
@@ -18,7 +18,7 @@ layout = html.Div([
                  'type': 'pie', 'name': 'Employee Count'}
             ],
             'layout': {
-                'title': 'Employee Count by Department'
+                'title': 'Número de empleados por departamento'
             }
         }
     ),
@@ -29,7 +29,7 @@ layout = html.Div([
                 {'x': df['Gender'], 'type': 'histogram', 'name': 'gender'}
             ],
             'layout': {
-                'title': 'Gender Distribution'
+                'title': 'Distibución de género'
             }
         }
     ),
@@ -43,6 +43,5 @@ layout = html.Div([
         # Agrega márgenes a los datos
         
     ),
-
-
-])
+    ], style={'margin': '20px'}
+)

@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 from scipy.stats import gaussian_kde
 
-dash.register_page(__name__)
+dash.register_page(__name__, name='Análisis Unidimensional', order=1)
 
 data_path = 'data/HR_Analytics.csv'
 
@@ -32,21 +32,15 @@ columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'JobLevel', 'Mo
 #Layout:
 layout = html.Div(
     children=[
-        html.H1('Unidimensional Analysis'),
-        html.H2('This page contains Descriptive analysis.'),
-        html.Div(
-            children=[
-                html.H3('Select a column to display its statistics:', style={
-                        'display': 'inline-block', 'margin-right': '10px'}),
-                dcc.Dropdown(
-                    id='column-select',
-                    options=[{'label': i, 'value': i} for i in columns],
-                    value=columns[0],
-                    style={'width': '50%', 'display': 'inline-block',
-                           'margin-left': '20px'}
-                )
-            ],
-            style={'margin': '20px'}
+        html.H1('Análisis Unidimensional'),
+        html.H3('Selecciona la primera columna:', style={
+            'display': 'inline-block', 'margin-right': '10px'}),
+        dcc.Dropdown(
+            id='column-select',
+            options=[{'label': i, 'value': i} for i in columns],
+            value=columns[0],
+            style={'width': '50%', 'display': 'inline-block',
+                   'margin-left': '20px'}
         ),
         dash_table.DataTable(id='table'),
         dcc.Graph(id='histogram'),
@@ -58,7 +52,7 @@ layout = html.Div(
                           'display': 'inline-block', 'width': '50%'})
             ]
         ),
-    ],
+    ], style={'margin': '20px'}
 )
 
 # Callbacks:

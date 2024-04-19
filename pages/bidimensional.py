@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import plotly.figure_factory as ff
 
-dash.register_page(__name__)
+dash.register_page(__name__, name='Análisis Bidimensional', order=2)
 
 data_path = 'data/HR_Analytics.csv'
 
@@ -36,15 +36,15 @@ columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'JobLevel', 'Mo
 layout = html.Div(
     children=[
         html.Div([
+            html.H1('Análisis Bidimensional'),
             dcc.Graph(id='correlation'),
-
-            html.H3('Select the first column (x-axis)'),
+            html.H3('Seleccina la primera columna (eje-x)'),
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[1]
             ),
-            html.H3('Select the second column (y-axis)'),
+            html.H3('Selecciona la segunda columna (eje-y)'),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
@@ -54,7 +54,7 @@ layout = html.Div(
             dcc.Graph(id='scatterplot'),
             dcc.Graph(id='linear_regression'),
         ]),
-    ]
+    ], style={'margin': '20px'}
 )
 
 # Callbacks:
