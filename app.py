@@ -23,7 +23,7 @@ app.layout = html.Div([
         dash.page_container
     ], style={'width': '78%', 'float': 'right', 'border': '1px solid #111'}),  # Estilo del contenedor de la página
 ],
-    style={'font-family': 'Arial, sans-serif', 'margin': '20px'}
+    style={'font-family': 'sans-serif', 'margin': '20px'}
 )
 
 if __name__ == '__main__':

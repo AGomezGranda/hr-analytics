@@ -52,16 +52,13 @@ layout = html.Div(
             ),
             dcc.Graph(id='heatmap'),
             dcc.Graph(id='scatterplot'),
-            dcc.Graph(id='linear_regression'),
         ]),
     ], style={'margin': '20px'}
 )
 
 # Callbacks:
-
-
 @callback(
-    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure'), Output('linear_regression', 'figure')],
+    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure')],
     [Input('xaxis-column', 'value'), Input('yaxis-column', 'value')]
 )
 def bi_dimensional_analysis(column1, column2):
@@ -120,12 +117,4 @@ def bi_dimensional_analysis(column1, column2):
     heatmap_fig = px.density_heatmap(
         df, x=column1, y=column2, marginal_x="histogram", marginal_y="histogram")
     
-    #Lienar regression (OLS)
-    # linear_regression = px.scatter(df, x=column1, y=column2, trendline='ols')
-
-    linear_regression = px.scatter(
-        df, x=column1, y=column2, opacity=0.65,
-        trendline='ols', trendline_color_override='darkblue'
-    )
-    
-    return correlation_fig, scatter_fig, heatmap_fig, linear_regression
+    return correlation_fig, scatter_fig, heatmap_fig

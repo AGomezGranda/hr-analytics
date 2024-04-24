@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 
 from scipy.stats import chi2_contingency, pearsonr, ttest_ind
 
-dash.register_page(__name__, name='Tabla de Contingencia', order=3)
+dash.register_page(__name__, name='Tabla de Contingencia', order=4)
 
 data_path = 'data/HR_Analytics.csv'
 
@@ -84,11 +84,12 @@ def update_table(xaxis_column_name, yaxis_column_name):
 def update_statistics(xaxis_column_name, yaxis_column_name):
     contingency = pd.crosstab(df[xaxis_column_name], df[yaxis_column_name])
     chi2, p, dof, expected = chi2_contingency(contingency)
-    r, p = pearsonr(contingency.values.flatten(), expected.flatten())
-    t, p = ttest_ind(contingency.values.flatten(), expected.flatten())
+    # r, p = pearsonr(contingency.values.flatten(), expected.flatten())
+    # t, p = ttest_ind(contingency.values.flatten(), expected.flatten())
     results = pd.DataFrame({
-        'Coefficient': ['Chi-square', 'Pearson\'s C', 'Student\'s T'],
-        'Value': [chi2, r, t]
+        'Coeficiente': ['Chi-square', 'Pearson\'s C', 'Student\'s T'],
+        'Valor': [chi2, 'r', 't'],
+        'P-valor': [p, 'n/a', 'n/a']
     })
     columns = [{"name": i, "id": i} for i in results.columns]
     data = results.to_dict('records')
