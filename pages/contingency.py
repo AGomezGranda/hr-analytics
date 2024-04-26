@@ -1,9 +1,11 @@
 import dash
 from dash import callback, html, dcc, dash_table
 import pandas as pd
+import numpy as np
 from dash.dependencies import Input, Output
 
-from scipy.stats import chi2_contingency, pearsonr, ttest_ind
+from scipy.stats import chi2_contingency
+from scipy.stats.contingency import association
 
 dash.register_page(__name__, name='Tabla de Contingencia', order=4)
 
@@ -84,11 +86,21 @@ def update_table(xaxis_column_name, yaxis_column_name):
 def update_statistics(xaxis_column_name, yaxis_column_name):
     contingency = pd.crosstab(df[xaxis_column_name], df[yaxis_column_name])
     chi2, p, dof, expected = chi2_contingency(contingency)
-    # r, p = pearsonr(contingency.values.flatten(), expected.flatten())
-    # t, p = ttest_ind(contingency.values.flatten(), expected.flatten())
+
+    # n = contingency.sum().sum()
+    #Calculate Pearson's C
+    # c = np.sqrt(chi2 / (chi2 + n))
+    #Calculate Tschuprow's T
+    # r, k = contingency.shape
+    # t = np.sqrt((chi2 / (chi2 + n)) * (1 - (r - 1) * (k - 1) / (n - 1)))
+    # t = np.sqrt(chi2 / (n*(min(r, k) - 1)))
+
+    C = association(contingency, method="pearson")
+    T = association(contingency, method="tschuprow")
+    
     results = pd.DataFrame({
-        'Coeficiente': ['Chi-square', 'Pearson\'s C', 'Student\'s T'],
-        'Valor': [chi2, 'r', 't'],
+        'Coeficiente': ['Chi-square', 'Pearson\'s C', 'Tschuprow\'s T'],
+        'Valor': [chi2, C, T],
         'P-valor': [p, 'n/a', 'n/a']
     })
     columns = [{"name": i, "id": i} for i in results.columns]

@@ -64,9 +64,6 @@ layout = html.Div(
 )
 def multidimensional_analysis(column1, column2):
 
-    # Lienar regression (OLS)
-    # linear_regression = px.scatter(df, x=column1, y=column2, trendline='ols')
-
     linear_regression = px.scatter(
         df, x=column1, y=column2, opacity=0.65,
         trendline='ols', trendline_color_override='darkblue'
@@ -89,12 +86,9 @@ def update_regression_results(column1, column2):
     results = model.fit()
 
     results_df = pd.DataFrame({
-        'Coefficient': ['Intercept', 'x'],
-        'Value': results.params.values,
-        'P-value': results.pvalues.values
+        'Métrica': ['R2', 'P-value'],
+        'Valor': [results.rsquared, results.f_pvalue]
     })
-    results_df = results_df.append(
-        {'Coefficient': 'R2', 'Value': results.rsquared, 'P-value': ''}, ignore_index=True)
 
     data = results_df.to_dict('records')
     columns = [{"name": i, "id": i} for i in results_df.columns]

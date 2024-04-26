@@ -37,11 +37,8 @@ layout = html.Div(
         id='table',
         columns=[{"name": i, "id": i} for i in df.columns],
         data=df.to_dict('records'),
-        page_size=20,  # Muestra solo 20 filas a la vez
-        # Asegura que la tabla no se expanda más allá de su contenedor
-        style_table={'overflowX': 'auto'},
-        # Agrega márgenes a los datos
-        
+        page_size=20,
+        style_table={'overflowX': 'auto'},        
     ),
     ], style={'margin': '20px'}
 )
