@@ -30,14 +30,11 @@ columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'JobLevel', 'Mo
 layout = html.Div(
     children=[
         html.H1('Análisis Unidimensional'),
-        html.H3('Selecciona la primera columna:', style={
-            'display': 'inline-block', 'margin-right': '10px'}),
+        html.H3('Selecciona la primera columna:', style={}),
         dcc.Dropdown(
             id='column-select',
             options=[{'label': i, 'value': i} for i in columns],
             value=columns[0],
-            style={'width': '50%', 'display': 'inline-block',
-                   'margin-left': '20px'}
         ),
         dash_table.DataTable(id='table'),
         dcc.Graph(id='histogram'),
@@ -49,7 +46,7 @@ layout = html.Div(
                           'display': 'inline-block', 'width': '50%'})
             ]
         ),
-    ], style={'margin': '20px'}
+    ], style={'padding': '20px'}
 )
 
 # Callbacks:

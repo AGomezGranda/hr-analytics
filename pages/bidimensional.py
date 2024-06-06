@@ -36,32 +36,45 @@ layout = html.Div(
         html.Div([
             html.H1('Análisis Bidimensional'),
             dcc.Graph(id='correlation'),
-            html.H3('Seleccina la primera columna (eje-x)'),
+            html.H4('Seleccina la primera columna (eje-x)',
+                    style={'margin-top': '10px'}),
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=data.columns[1]
             ),
-            html.H3('Selecciona la segunda columna (eje-y)'),
+            html.H4('Selecciona la segunda columna (eje-y)',
+                    style={'margin-top': '10px'}),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=data.columns[5]
             ),
+
+            html.H2('Mapa de calor',  style={'margin-top': '20px'}),
+
             dcc.Graph(id='heatmap'),
             dcc.Graph(id='scatterplot'),
 
-            html.H4('Regresión lineal'),
+            html.H2('Regresión lineal',  style={'margin-top': '20px'}),
             dcc.Graph(id='linear_regression'),
             dcc.Graph(id='residual_plot'),
-            dash_table.DataTable(id='regression_results'),
+            dash_table.DataTable(id='regression_results',
+                                 style_cell={'padding': '5px'},
+                                 style_header={
+                                     'backgroundColor': 'white',
+                                     'fontWeight': 'bold',
+                                 },),
         ]),
-    ], style={'margin': '20px'}
+    ], style={'padding': '20px'}
 )
 
 # Callbacks:
+
+
 @callback(
-    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure'), Output('linear_regression','figure'), Output('regression_results', 'data'), Output('regression_results', 'columns'), Output('residual_plot', 'figure')],
+    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure'), Output('linear_regression',
+                                                                                                           'figure'), Output('regression_results', 'data'), Output('regression_results', 'columns'), Output('residual_plot', 'figure')],
     [Input('xaxis-column', 'value'), Input('yaxis-column', 'value')]
 )
 def bi_dimensional_analysis(column1, column2):

@@ -4,14 +4,15 @@ import pandas as pd
 import dash_bootstrap_components as dbc
 
 app = Dash(__name__, use_pages=True,
-           external_stylesheets=[dbc.themes.SPACELAB])
+           external_stylesheets=[dbc.themes.FLATLY])
 df = pd.read_csv('data/HR_Analytics.csv')
 
 app.layout = dbc.Container(
 
     dbc.Row([
 
-        html.H1('HR Analytics Dashboard', className="display-5"),
+        html.H1('HR Analytics Dashboard', className="display-5", style={"margin-bottom": "10px", "margin-top": "20px"}),
+        html.Hr(className="my-3"),
 
         dbc.Col(
             dbc.Nav(
@@ -33,7 +34,7 @@ app.layout = dbc.Container(
         dbc.Col(
             html.Div([
                 dash.page_container
-            ], style={'border': '1px solid #111', 'border-radius': '5px', 'margin-bottom': '5px', 'background-color': '#f2f2f2'}),
+            ], style={'border': '1px none #111', 'border-radius': '5px', 'margin-bottom': '5px', 'background-color': '#ECF0F1'}),
             width=9
         ),
     ]),

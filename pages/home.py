@@ -40,5 +40,5 @@ layout = html.Div(
         page_size=20,
         style_table={'overflowX': 'auto'},        
     ),
-    ], style={'margin': '20px'}
+    ], style={'padding': '20px'}
 )

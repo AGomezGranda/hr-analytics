@@ -93,20 +93,22 @@ def kmeans_clustering_3d(data, columns):
 layout = html.Div(
     children=[
         html.Div([
-            html.H1('Clustering'),
+            html.H1('Clustering  K-means'),
 
-            html.H2('Método del codo'),
+            html.H3('Método del codo', style={'margin-top': '20px'}),
             # Elbow Method Graph
             dcc.Graph(id='elbow_method'),
 
-            html.H2('Gráfico bidimensional Clusters'),
+            html.H3('Gráfico bidimensional Clusters',
+                    style={'margin-top': '20px'}),
             dcc.Graph(id='kmeans'),
 
-            html.H2('Gráfico tridimensional Clusters'),
+            html.H3('Gráfico tridimensional Clusters',
+                    style={'margin-top': '20px'}),
             dcc.Graph(id='kmeans_3d'),
 
         ]),
-    ], style={'margin': '20px'}
+    ], style={'padding': '20px'}
 )
 
 

@@ -35,32 +35,33 @@ layout = html.Div(
     children=[
         html.Div([
             html.H1('Tabla de Contingencia'),
-            html.H3('Selecciona la variable independiente (eje-x)'),
+            html.H4('Selecciona la variable independiente (eje-x)'),
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[3]
             ),
-            html.H3('Selecciona la variable dependiente (eje-y)'),
+            html.H4('Selecciona la variable dependiente (eje-y)',
+                    style={'margin-top': '10px'}),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[4]
             ),
-            html.H3('Tabla de Contingencia:'),
+            html.H2('Tabla de Contingencia:',  style={'margin-top': '20px'}),
             dash_table.DataTable(
                 id='contingency',
                 page_size=20,
                 style_table={'overflowX': 'auto'},
             ),
-            html.H3('Coeficientes:'),
+            html.H4('Coeficientes:',  style={'margin-top': '10px'}),
             dash_table.DataTable(
                 id='statistics',
                 page_size=20,
                 style_table={'overflowX': 'auto'},
             )
         ]),
-    ], style={'margin': '20px'}
+    ], style={'padding': '20px'}
 )
 
 
