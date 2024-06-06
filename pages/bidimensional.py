@@ -27,7 +27,7 @@ def load_data(file_path):
 
 data = load_data(data_path)
 
-columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'JobLevel', 'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike',
+columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike',
            'TotalWorkingYears', 'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager']
 
 # Layout:
@@ -64,6 +64,7 @@ layout = html.Div(
                                  style_header={
                                      'backgroundColor': 'white',
                                      'fontWeight': 'bold',
+                                     'textAlign': 'center'
                                  },),
         ]),
     ], style={'padding': '20px'}

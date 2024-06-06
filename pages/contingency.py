@@ -27,7 +27,7 @@ data = load_data(data_path)
 
 df = pd.read_csv(data_path)
 
-columns = ['Attrition', 'BusinessTravel', 'Department', 'Education', 'EducationField', 'EnvironmentSatisfaction', 'Gender',
+columns = ['Attrition', 'BusinessTravel', 'Department', 'Education', 'JobLevel', 'EducationField', 'EnvironmentSatisfaction', 'Gender',
            'JobInvolvement', 'JobRole', 'JobSatisfaction', 'MaritalStatus', 'OverTime', 'RelationshipSatisfaction', 'WorkLifeBalance']
 
 # Layout:
@@ -48,7 +48,7 @@ layout = html.Div(
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[4]
             ),
-            html.H2('Tabla de Contingencia:',  style={'margin-top': '20px'}),
+            html.H2('Tabla de Contingencia:',  style={'margin-top': '10px'}),
             dash_table.DataTable(
                 id='contingency',
                 page_size=20,
