@@ -1,13 +1,12 @@
 import dash
 from dash import callback, html, dcc, dash_table
 import pandas as pd
-import numpy as np
 from dash.dependencies import Input, Output
 
 from scipy.stats import chi2_contingency
 from scipy.stats.contingency import association
 
-dash.register_page(__name__, name='Tabla de Contingencia', order=4)
+dash.register_page(__name__, name='Tabla de Contingencia', order=3)
 
 data_path = 'data/HR_Analytics.csv'
 
@@ -36,13 +35,13 @@ layout = html.Div(
     children=[
         html.Div([
             html.H1('Tabla de Contingencia'),
-            html.H3('Selecciona la primera columna (eje-x)'),
+            html.H3('Selecciona la variable independiente (eje-x)'),
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[3]
             ),
-            html.H3('Selecciona la segunda columna (eje-y)'),
+            html.H3('Selecciona la variable dependiente (eje-y)'),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],

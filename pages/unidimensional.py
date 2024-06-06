@@ -104,5 +104,3 @@ def update_output(column):
     box_fig_strip = px.strip(df[column], title=column)
 
     return table_data, table_columns, hist, box_fig_outliers, box_fig_strip
-
-

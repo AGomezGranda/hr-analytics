@@ -1,11 +1,12 @@
 import dash
 import pandas as pd
 import numpy as np
-from dash import html, dcc, callback
+from dash import html, dcc, callback, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import plotly.figure_factory as ff
+import statsmodels.api as sm
 
 dash.register_page(__name__, name='Análisis Bidimensional', order=2)
 
@@ -52,13 +53,18 @@ layout = html.Div(
             ),
             dcc.Graph(id='heatmap'),
             dcc.Graph(id='scatterplot'),
+
+            html.H4('Regresión lineal'),
+            dcc.Graph(id='linear_regression'),
+            dcc.Graph(id='residual_plot'),
+            dash_table.DataTable(id='regression_results'),
         ]),
     ], style={'margin': '20px'}
 )
 
 # Callbacks:
 @callback(
-    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure')],
+    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure'), Output('linear_regression','figure'), Output('regression_results', 'data'), Output('regression_results', 'columns'), Output('residual_plot', 'figure')],
     [Input('xaxis-column', 'value'), Input('yaxis-column', 'value')]
 )
 def bi_dimensional_analysis(column1, column2):
@@ -116,5 +122,37 @@ def bi_dimensional_analysis(column1, column2):
     # Density heatmap
     heatmap_fig = px.density_heatmap(
         df, x=column1, y=column2, marginal_x="histogram", marginal_y="histogram")
-    
-    return correlation_fig, scatter_fig, heatmap_fig
+
+    # Linear regression
+    linear_regression = px.scatter(
+        df, x=column1, y=column2, opacity=0.65,
+        trendline='ols', trendline_color_override='darkblue'
+    )
+
+    # Regression results, residuals and residual plot
+    df[column1] = pd.to_numeric(df[column1], errors='coerce')
+    df[column2] = pd.to_numeric(df[column2], errors='coerce')
+    df_clean = df.dropna(subset=[column1, column2])
+    X = sm.add_constant(df_clean[column1])
+    model = sm.OLS(df_clean[column2], X)
+    results = model.fit()
+
+    # Calcula los residuos
+    residuals = df_clean[column2] - results.fittedvalues
+
+    # Crea el gráfico de residuos
+    residual_plot = go.Figure()
+    residual_plot.add_trace(go.Scatter(
+        x=results.fittedvalues, y=residuals, mode='markers'))
+    residual_plot.update_layout(title='Residuals vs Fitted Values',
+                                xaxis_title='Fitted Values', yaxis_title='Residuals')
+
+    results_df = pd.DataFrame({
+        'Métrica': ['R2', 'P-value'],
+        'Valor': [results.rsquared, results.f_pvalue]
+    })
+
+    res_data = results_df.to_dict('records')
+    res_columns = [{"name": i, "id": i} for i in results_df.columns]
+
+    return correlation_fig, scatter_fig, heatmap_fig, linear_regression, res_data, res_columns, residual_plot
