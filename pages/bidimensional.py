@@ -27,9 +27,6 @@ def load_data(file_path):
 
 data = load_data(data_path)
 
-df = pd.read_csv(data_path)
-
-
 columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'JobLevel', 'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike',
            'TotalWorkingYears', 'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager']
 
@@ -43,13 +40,13 @@ layout = html.Div(
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=df.columns[1]
+                value=data.columns[1]
             ),
             html.H3('Selecciona la segunda columna (eje-y)'),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=df.columns[5]
+                value=data.columns[5]
             ),
             dcc.Graph(id='heatmap'),
             dcc.Graph(id='scatterplot'),
@@ -70,7 +67,7 @@ layout = html.Div(
 def bi_dimensional_analysis(column1, column2):
 
     # Correlation matrix
-    correlation_matrix = df[columns].corr()
+    correlation_matrix = data[columns].corr()
     mask = np.triu(np.ones_like(correlation_matrix, dtype=bool))
     masked_correlation_matrix = correlation_matrix.mask(mask)
 
@@ -103,8 +100,8 @@ def bi_dimensional_analysis(column1, column2):
     # Scatter plot
     scatter_fig = {
         'data': [go.Scatter(
-            x=df[column1],
-            y=df[column2],
+            x=data[column1],
+            y=data[column2],
             mode='markers',
             marker=dict(
                 size=5,
@@ -121,24 +118,24 @@ def bi_dimensional_analysis(column1, column2):
 
     # Density heatmap
     heatmap_fig = px.density_heatmap(
-        df, x=column1, y=column2, marginal_x="histogram", marginal_y="histogram")
+        data, x=column1, y=column2, marginal_x="histogram", marginal_y="histogram")
 
     # Linear regression
     linear_regression = px.scatter(
-        df, x=column1, y=column2, opacity=0.65,
+        data, x=column1, y=column2, opacity=0.65,
         trendline='ols', trendline_color_override='darkblue'
     )
 
     # Regression results, residuals and residual plot
-    df[column1] = pd.to_numeric(df[column1], errors='coerce')
-    df[column2] = pd.to_numeric(df[column2], errors='coerce')
-    df_clean = df.dropna(subset=[column1, column2])
-    X = sm.add_constant(df_clean[column1])
-    model = sm.OLS(df_clean[column2], X)
+    data[column1] = pd.to_numeric(data[column1], errors='coerce')
+    data[column2] = pd.to_numeric(data[column2], errors='coerce')
+    data_clean = data.dropna(subset=[column1, column2])
+    X = sm.add_constant(data_clean[column1])
+    model = sm.OLS(data_clean[column2], X)
     results = model.fit()
 
     # Calcula los residuos
-    residuals = df_clean[column2] - results.fittedvalues
+    residuals = data_clean[column2] - results.fittedvalues
 
     # Crea el gráfico de residuos
     residual_plot = go.Figure()
@@ -147,12 +144,12 @@ def bi_dimensional_analysis(column1, column2):
     residual_plot.update_layout(title='Residuals vs Fitted Values',
                                 xaxis_title='Fitted Values', yaxis_title='Residuals')
 
-    results_df = pd.DataFrame({
+    results_data = pd.DataFrame({
         'Métrica': ['R2', 'P-value'],
         'Valor': [results.rsquared, results.f_pvalue]
     })
 
-    res_data = results_df.to_dict('records')
-    res_columns = [{"name": i, "id": i} for i in results_df.columns]
+    res_data = results_data.to_dict('records')
+    res_columns = [{"name": i, "id": i} for i in results_data.columns]
 
     return correlation_fig, scatter_fig, heatmap_fig, linear_regression, res_data, res_columns, residual_plot

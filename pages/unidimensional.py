@@ -23,9 +23,6 @@ def load_data(file_path):
         return None
 data = load_data(data_path)
 
-df = pd.read_csv(data_path)
-
-
 columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'JobLevel', 'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike',
            'TotalWorkingYears', 'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager']
 
@@ -63,33 +60,33 @@ layout = html.Div(
 )
 def update_output(column):
     stats = {
-        'Moda': round(df[column].mode()[0], 6),
-        'Rango': round(df[column].max() - df[column].min(), 6),
-        'Q1': round(df[column].quantile(0.25), 6),
-        'Mediana Q2': round(df[column].median(), 6),
-        'Q3': round(df[column].quantile(0.75), 6),
-        'std': round(df[column].std(), 6),
-        'var': round(df[column].var(), 6),
-        'CV': round(df[column].std() / df[column].mean(), 6),
-        'Min': round(df[column].min(), 6),
-        'Máx': round(df[column].max(), 6),
-        'Media': round(df[column].mean(), 6),
-        'Asimetría': round(df[column].skew(), 6),
-        'Curtosis': round(df[column].kurt(), 6),
+        'Moda': round(data[column].mode()[0], 6),
+        'Rango': round(data[column].max() - data[column].min(), 6),
+        'Q1': round(data[column].quantile(0.25), 6),
+        'Mediana Q2': round(data[column].median(), 6),
+        'Q3': round(data[column].quantile(0.75), 6),
+        'std': round(data[column].std(), 6),
+        'var': round(data[column].var(), 6),
+        'CV': round(data[column].std() / data[column].mean(), 6),
+        'Min': round(data[column].min(), 6),
+        'Máx': round(data[column].max(), 6),
+        'Media': round(data[column].mean(), 6),
+        'Asimetría': round(data[column].skew(), 6),
+        'Curtosis': round(data[column].kurt(), 6),
     }
-    df_stats = pd.DataFrame.from_records([stats])
-    table_data = df_stats.to_dict('records')
-    table_columns = [{"name": i, "id": i} for i in df_stats.columns]
+    data_stats = pd.DataFrame.from_records([stats])
+    table_data = data_stats.to_dict('records')
+    table_columns = [{"name": i, "id": i} for i in data_stats.columns]
 
     # histogram for the column selected
-    num_bins = np.sqrt(len(df[column]))
+    num_bins = np.sqrt(len(data[column]))
     num_bins = int(num_bins)
 
-    density = gaussian_kde(df[column])
-    x_values = np.linspace(min(df[column]), max(df[column]), 200)
+    density = gaussian_kde(data[column])
+    x_values = np.linspace(min(data[column]), max(data[column]), 200)
     y_values = density(x_values)
 
-    hist = px.histogram(df, x=column, nbins=num_bins,
+    hist = px.histogram(data, x=column, nbins=num_bins,
                         histnorm='probability density')
     fig = hist.update_layout(bargap=0.01)
     hist.add_trace(go.Scatter(x=x_values, y=y_values,
@@ -97,10 +94,10 @@ def update_output(column):
 
     # box plot for the column selected
     box_fig_outliers = go.Figure(
-        data=[{'y': df[column], 'type': 'box',
+        data=[{'y': data[column], 'type': 'box',
                'name': column, 'boxpoints': 'outliers'}],
     )
 
-    box_fig_strip = px.strip(df[column], title=column)
+    box_fig_strip = px.strip(data[column], title=column)
 
     return table_data, table_columns, hist, box_fig_outliers, box_fig_strip
