@@ -5,7 +5,8 @@ import dash_bootstrap_components as dbc
 
 app = Dash(__name__, use_pages=True,
            external_stylesheets=[dbc.themes.FLATLY])
-df = pd.read_csv('data/HR_Analytics.csv')
+
+df = pd.read_csv('data/HR_Analytics.csv', encoding='utf-8', sep=";")
 
 app.layout = dbc.Container(
 

@@ -11,21 +11,21 @@ dash.register_page(__name__, name='Tabla de Contingencia', order=3)
 data_path = 'data/HR_Analytics.csv'
 
 
-def load_data(file_path):
-    try:
-        data = pd.read_csv(file_path)
-        return data
-    except FileNotFoundError:
-        print(f"File not found: {file_path}")
-        return None
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        return None
+# def load_data(file_path):
+#     try:
+#         data = pd.read_csv(file_path)
+#         return data
+#     except FileNotFoundError:
+#         print(f"File not found: {file_path}")
+#         return None
+#     except Exception as e:
+#         print(f"Error occurred: {e}")
+#         return None
 
 
-data = load_data(data_path)
+# data = load_data(data_path)
 
-df = pd.read_csv(data_path)
+df = pd.read_csv(data_path, sep=';')
 
 columns = ['Attrition', 'BusinessTravel', 'Department', 'Education', 'JobLevel', 'EducationField', 'EnvironmentSatisfaction', 'Gender',
            'JobInvolvement', 'JobRole', 'JobSatisfaction', 'MaritalStatus', 'OverTime', 'RelationshipSatisfaction', 'WorkLifeBalance']
@@ -39,14 +39,14 @@ layout = html.Div(
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=df.columns[3]
+                value=df.columns[1]
             ),
             html.H4('Selecciona la variable dependiente (eje-y)',
                     style={'margin-top': '10px'}),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=df.columns[4]
+                value=df.columns[2]
             ),
             html.H2('Tabla de Contingencia:',  style={'margin-top': '10px'}),
             dash_table.DataTable(

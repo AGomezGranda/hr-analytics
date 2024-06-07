@@ -5,28 +5,31 @@ from dash import html, dcc, dash_table
 
 dash.register_page(__name__, path='/', name='Inicio', order=0)
 
-df = pd.read_csv('data/HR_Analytics.csv')
+data_path = 'data/HR_Analytics.csv'
+
+
+def load_data(file_path):
+    try:
+        data = pd.read_csv(file_path, encoding='utf-8', sep=";")
+        return data
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        return None
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return None
+
+
+data = load_data(data_path)
 
 layout = html.Div(
     children=[
     html.H1('Inicio'),
     dcc.Graph(
-        id='employee-count',
-        figure={
-            'data': [
-                {'labels': df['Department'], 'values': df['EmployeeCount'],
-                 'type': 'pie', 'name': 'Employee Count'}
-            ],
-            'layout': {
-                'title': 'Número de empleados por departamento'
-            }
-        }
-    ),
-    dcc.Graph(
         id='gender-distribution',
         figure={
             'data': [
-                {'x': df['Gender'], 'type': 'histogram', 'name': 'gender'}
+                {'x': data['Gender'], 'type': 'histogram', 'name': 'gender'}
             ],
             'layout': {
                 'title': 'Distibución de género'
@@ -35,8 +38,8 @@ layout = html.Div(
     ),
     dash_table.DataTable(
         id='table',
-        columns=[{"name": i, "id": i} for i in df.columns],
-        data=df.to_dict('records'),
+        columns=[{"name": i, "id": i} for i in data.columns],
+        data=data.to_dict('records'),
         page_size=20,
         style_table={'overflowX': 'auto'},        
     ),

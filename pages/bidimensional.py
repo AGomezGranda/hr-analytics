@@ -15,7 +15,7 @@ data_path = 'data/HR_Analytics.csv'
 
 def load_data(file_path):
     try:
-        data = pd.read_csv(file_path)
+        data = pd.read_csv(file_path, encoding='utf-8', sep=";")
         return data
     except FileNotFoundError:
         print(f"File not found: {file_path}")
@@ -41,14 +41,14 @@ layout = html.Div(
             dcc.Dropdown(
                 id='xaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=data.columns[1]
+                value=data.columns[0]
             ),
             html.H4('Selecciona la segunda columna (eje-y)',
                     style={'margin-top': '10px'}),
             dcc.Dropdown(
                 id='yaxis-column',
                 options=[{'label': i, 'value': i} for i in columns],
-                value=data.columns[5]
+                value=data.columns[3]
             ),
 
             html.H2('Mapa de calor',  style={'margin-top': '20px'}),

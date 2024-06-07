@@ -17,7 +17,7 @@ data_path = 'data/HR_Analytics.csv'
 
 def load_data(file_path):
     try:
-        data = pd.read_csv(file_path)
+        data = pd.read_csv(file_path, encoding='utf-8', sep=";")
         return data
     except FileNotFoundError:
         print(f"File not found: {file_path}")
