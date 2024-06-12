@@ -29,9 +29,6 @@ def load_data(file_path):
 
 data = load_data(data_path)
 
-# columns_pre = ['Age', 'DistanceFromHome', 'MonthlyIncome', 'NumCompaniesWorked',
-#                'PercentSalaryHike', 'TotalWorkingYears', 'YearsAtCompany']
-
 # columns = ['MonthlyIncome', 'NumCompaniesWorked', 'TotalWorkingYears']
 
 columns = ['Age', 'DistanceFromHome', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike',
@@ -44,7 +41,7 @@ def elbow_method(data, columns):
                         max_iter=300, n_init=10, random_state=0)
         kmeans.fit(data[columns])
         wcss.append(kmeans.inertia_)
-    return go.Figure(data=go.Scatter(x=np.arange(1, 11), y=wcss), layout=go.Layout(title='Elbow Method', xaxis=dict(title='Number of clusters'), yaxis=dict(title='WCSS')))
+    return go.Figure(data=go.Scatter(x=np.arange(1, 11), y=wcss), layout=go.Layout(title="Método del codo" , xaxis=dict(title='Número de clusters'), yaxis=dict(title='WCSS')))
 
 
 def kmeans_clustering(data, columns):
@@ -53,12 +50,10 @@ def kmeans_clustering(data, columns):
                     max_iter=300, n_init=10, random_state=0)
     data['cluster'] = kmeans.fit_predict(data[columns])
 
-    # Crear una figura de Plotly con un scatter plot para cada cluster
     fig = go.Figure()
     for i in range(n_clusters):
         cluster_data = data[data['cluster'] == i]
         fig.add_trace(go.Scatter(
-            # Asume que columns tiene al menos dos elementos
             x=cluster_data[columns[0]],
             y=cluster_data[columns[1]],
             mode='markers',

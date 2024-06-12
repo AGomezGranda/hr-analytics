@@ -54,18 +54,12 @@ layout = html.Div(
             html.H2('Mapa de calor',  style={'margin-top': '20px'}),
 
             dcc.Graph(id='heatmap'),
-            dcc.Graph(id='scatterplot'),
+            # dcc.Graph(id='scatterplot'),
 
             html.H2('Regresión lineal',  style={'margin-top': '20px'}),
             dcc.Graph(id='linear_regression'),
             dcc.Graph(id='residual_plot'),
-            dash_table.DataTable(id='regression_results',
-                                 style_cell={'padding': '5px'},
-                                 style_header={
-                                     'backgroundColor': 'white',
-                                     'fontWeight': 'bold',
-                                     'textAlign': 'center'
-                                 },),
+            dash_table.DataTable(id='regression_results'),
         ]),
     ], style={'padding': '20px'}
 )
@@ -74,8 +68,8 @@ layout = html.Div(
 
 
 @callback(
-    [Output('correlation', 'figure'), Output('scatterplot', 'figure'), Output('heatmap', 'figure'), Output('linear_regression',
-                                                                                                           'figure'), Output('regression_results', 'data'), Output('regression_results', 'columns'), Output('residual_plot', 'figure')],
+    [Output('correlation', 'figure'), Output('heatmap', 'figure'), Output('linear_regression', 'figure'), Output(
+        'regression_results', 'data'), Output('regression_results', 'columns'), Output('residual_plot', 'figure')],
     [Input('xaxis-column', 'value'), Input('yaxis-column', 'value')]
 )
 def bi_dimensional_analysis(column1, column2):
@@ -110,25 +104,6 @@ def bi_dimensional_analysis(column1, column2):
     for i in range(len(correlation_fig.layout.annotations)):
         if correlation_fig.layout.annotations[i].text == 'nan':
             correlation_fig.layout.annotations[i].text = ""
-
-    # Scatter plot
-    scatter_fig = {
-        'data': [go.Scatter(
-            x=data[column1],
-            y=data[column2],
-            mode='markers',
-            marker=dict(
-                size=5,
-                color='blue',
-                opacity=0.8
-            )
-        )],
-        'layout': go.Layout(
-            title=f'{column1} vs {column2}',
-            xaxis={'title': column1},
-            yaxis={'title': column2}
-        )
-    }
 
     # Density heatmap
     heatmap_fig = px.density_heatmap(
@@ -166,4 +141,4 @@ def bi_dimensional_analysis(column1, column2):
     res_data = results_data.to_dict('records')
     res_columns = [{"name": i, "id": i} for i in results_data.columns]
 
-    return correlation_fig, scatter_fig, heatmap_fig, linear_regression, res_data, res_columns, residual_plot
+    return correlation_fig, heatmap_fig, linear_regression, res_data, res_columns, residual_plot

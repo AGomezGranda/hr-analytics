@@ -48,7 +48,7 @@ layout = html.Div(
                 options=[{'label': i, 'value': i} for i in columns],
                 value=df.columns[2]
             ),
-            html.H2('Tabla de Contingencia:',  style={'margin-top': '10px'}),
+            html.H3('',  style={'margin-top': '20px'}),
             dash_table.DataTable(
                 id='contingency',
                 page_size=20,
