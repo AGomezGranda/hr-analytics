@@ -4,11 +4,13 @@ from dash import html, dcc, callback, dash_table
 import plotly.express as px
 from dash.dependencies import Input, Output
 
+from sklearn.decomposition import PCA
 import statsmodels.api as sm
 import plotly.graph_objects as go
 import numpy as np
 from sklearn.cluster import KMeans
 
+import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, name='Clustering', order=4)
 
@@ -29,10 +31,9 @@ def load_data(file_path):
 
 data = load_data(data_path)
 
-# columns = ['MonthlyIncome', 'NumCompaniesWorked', 'TotalWorkingYears']
-
 columns = ['Age', 'DistanceFromHome', 'MonthlyIncome', 'NumCompaniesWorked', 'PercentSalaryHike',
            'TotalWorkingYears', 'TrainingTimesLastYear', 'YearsAtCompany', 'YearsSinceLastPromotion']
+
 
 def elbow_method(data, columns):
     wcss = []
@@ -41,48 +42,74 @@ def elbow_method(data, columns):
                         max_iter=300, n_init=10, random_state=0)
         kmeans.fit(data[columns])
         wcss.append(kmeans.inertia_)
-    return go.Figure(data=go.Scatter(x=np.arange(1, 11), y=wcss), layout=go.Layout(title="Método del codo" , xaxis=dict(title='Número de clusters'), yaxis=dict(title='WCSS')))
+    return go.Figure(data=go.Scatter(x=np.arange(1, 11), y=wcss), layout=go.Layout(xaxis=dict(title='Número de clusters'), yaxis=dict(title='WCSS')))
 
 
+# Aplica PCA a tus datoscy calcula los clusters con KMeans
 def kmeans_clustering(data, columns):
     n_clusters = 3
+    n_components = 2
+    pca = PCA(n_components=n_components)
+    data_pca = pca.fit_transform(data[columns])
+
     kmeans = KMeans(n_clusters=n_clusters, init='k-means++',
                     max_iter=300, n_init=10, random_state=0)
-    data['cluster'] = kmeans.fit_predict(data[columns])
+    clusters = kmeans.fit_predict(data_pca)
 
     fig = go.Figure()
     for i in range(n_clusters):
-        cluster_data = data[data['cluster'] == i]
+        cluster_data = data_pca[clusters == i]
         fig.add_trace(go.Scatter(
-            x=cluster_data[columns[0]],
-            y=cluster_data[columns[1]],
+            x=cluster_data[:, 0],
+            y=cluster_data[:, 1],
             mode='markers',
             name=f'Cluster {i}'
         ))
+
+    # Agrega los centroides de los clusters al gráfico
+    centroids = kmeans.cluster_centers_
+    fig.add_trace(go.Scatter(
+        x=centroids[:, 0],
+        y=centroids[:, 1],
+        mode='markers',
+        marker=dict(
+            size=10,
+            color='rgba(255, 182, 193, .9)',
+            line=dict(
+                width=2,
+                color='rgba(152, 0, 0, .8)'
+            )
+        ),
+        name='Centroides'
+    ))
 
     return fig
 
 
 def kmeans_clustering_3d(data, columns):
+    n_components = 3
+    pca = PCA(n_components=n_components)
+    data_pca = pca.fit_transform(data[columns])
+
     n_clusters = 3
     kmeans = KMeans(n_clusters=n_clusters, init='k-means++',
                     max_iter=300, n_init=10, random_state=0)
-    data['cluster'] = kmeans.fit_predict(data[columns])
+    clusters = kmeans.fit_predict(data_pca)
 
     # Crear una figura de Plotly con un scatter plot 3D para cada cluster
     fig = go.Figure()
     for i in range(n_clusters):
-        cluster_data = data[data['cluster'] == i]
+        cluster_data = data_pca[clusters == i]
         fig.add_trace(go.Scatter3d(
-            # Asume que columns tiene al menos tres elementos
-            x=cluster_data[columns[0]],
-            y=cluster_data[columns[1]],
-            z=cluster_data[columns[2]],
+            x=cluster_data[:, 0],
+            y=cluster_data[:, 1],
+            z=cluster_data[:, 2],
             mode='markers',
             name=f'Cluster {i}'
         ))
 
     return fig
+
 
 # Layout:
 layout = html.Div(
@@ -90,32 +117,44 @@ layout = html.Div(
         html.Div([
             html.H1('Clustering  K-means'),
 
-            html.H3('Método del codo', style={'margin-top': '20px'}),
-            # Elbow Method Graph
-            dcc.Graph(id='elbow_method'),
-
-            html.H3('Gráfico bidimensional Clusters',
-                    style={'margin-top': '20px'}),
-            dcc.Graph(id='kmeans'),
-
-            html.H3('Gráfico tridimensional Clusters',
-                    style={'margin-top': '20px'}),
-            dcc.Graph(id='kmeans_3d'),
-
+            dbc.Tabs([
+                dbc.Tab(label='Método del codo', children=[
+                    # dbc.Graph(id='kmeans'),
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H3('Método del codo', style={
+                                    'margin-top': '20px'}),
+                            dcc.Graph(id='elbow_method'),
+                        ]),
+                    ]),
+                ]),
+                dbc.Tab(label='Representacion gráfica', children=[
+                    dbc.Card([
+                        dbc.CardBody([
+                    html.H3('Gráfico bidimensional Clusters',
+                            style={'margin-top': '20px'}),
+                    dcc.Graph(id='kmeans'),
+                    html.H3('Gráfico tridimensional Clusters',
+                            style={'margin-top': '20px'}),
+                    dcc.Graph(id='kmeans_3d'),
+                        ]),
+                    ]),
+                ]),
+            ]),
         ]),
     ], style={'padding': '20px'}
 )
 
 
-#calculate via the elbow method the optimal number of clusters
+# calculate via the elbow method the optimal number of clusters
 @callback(
-        Output('elbow_method', 'figure'),
-        Input('elbow_method', 'id')
+    Output('elbow_method', 'figure'),
+    Input('elbow_method', 'id')
 )
 def update_graph(id):
     return elbow_method(data, columns)
 
-#calculate the kmeans clustering
+# calculate the kmeans clustering
 
 
 @callback(

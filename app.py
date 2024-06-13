@@ -16,7 +16,7 @@ app.layout = dbc.Container(
         html.Hr(className="my-3"),
 
         dbc.Col(
-            dbc.Nav(
+            dbc.Nav(    
                 [
                     dbc.NavLink(
                         html.Div(page["name"],  className="ms-2"),

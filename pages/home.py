@@ -25,17 +25,6 @@ data = load_data(data_path)
 layout = html.Div(
     children=[
     html.H1('Inicio'),
-    dcc.Graph(
-        id='gender-distribution',
-        figure={
-            'data': [
-                {'x': data['Gender'], 'type': 'histogram', 'name': 'gender'}
-            ],
-            'layout': {
-                'title': 'Distibución de género'
-            }
-        }
-    ),
     dash_table.DataTable(
         id='table',
         columns=[{"name": i, "id": i} for i in data.columns],

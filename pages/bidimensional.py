@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 from dash.dependencies import Input, Output
 import plotly.figure_factory as ff
 import statsmodels.api as sm
+import dash_bootstrap_components as dbc
 
 dash.register_page(__name__, name='Análisis Bidimensional', order=2)
 
@@ -35,31 +36,74 @@ layout = html.Div(
     children=[
         html.Div([
             html.H1('Análisis Bidimensional'),
-            dcc.Graph(id='correlation'),
-            html.H4('Seleccina la primera columna (eje-x)',
-                    style={'margin-top': '10px'}),
-            dcc.Dropdown(
-                id='xaxis-column',
-                options=[{'label': i, 'value': i} for i in columns],
-                value=data.columns[0]
-            ),
-            html.H4('Selecciona la segunda columna (eje-y)',
-                    style={'margin-top': '10px'}),
-            dcc.Dropdown(
-                id='yaxis-column',
-                options=[{'label': i, 'value': i} for i in columns],
-                value=data.columns[3]
-            ),
 
-            html.H2('Mapa de calor',  style={'margin-top': '20px'}),
+            dbc.Tabs([
+                dbc.Tab(label='Correlación', children=[
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H3('Matriz de Correlación', style={
+                                'margin-top': '20px'}),
+                            dcc.Graph(id='correlation'),
 
-            dcc.Graph(id='heatmap'),
-            # dcc.Graph(id='scatterplot'),
+                        ]),
+                    ]),
+                ]),
+                dbc.Tab(label='Mapa de Calor', children=[
+                    dbc.Card([
+                        dbc.CardBody([
+                            
+                            html.H3('Mapa de calor',  style={'margin-top': '20px'}),
 
-            html.H2('Regresión lineal',  style={'margin-top': '20px'}),
-            dcc.Graph(id='linear_regression'),
-            dcc.Graph(id='residual_plot'),
-            dash_table.DataTable(id='regression_results'),
+                            html.H4('Seleccina la primera columna (eje-x)',
+                                    style={'margin-top': '10px'}),
+                            dcc.Dropdown(
+                                id='xaxis-column',
+                                options=[{'label': i, 'value': i}
+                                         for i in columns],
+                                value=data.columns[0]
+                            ),
+                            html.H4('Selecciona la segunda columna (eje-y)',
+                                    style={'margin-top': '10px'}),
+                            dcc.Dropdown(
+                                id='yaxis-column',
+                                options=[{'label': i, 'value': i}
+                                         for i in columns],
+                                value=data.columns[3]
+                            ),
+
+                            dcc.Graph(id='heatmap'),
+                        ]),
+                    ]),
+                ]),
+                dbc.Tab(label='Regresión Lineal', children=[
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H3('Regresión lineal',  style={'margin-top': '20px'}),
+
+                            html.H4('Seleccina la primera columna (eje-x)',
+                                    style={'margin-top': '10px'}),
+                            dcc.Dropdown(
+                                id='xaxis-column',
+                                options=[{'label': i, 'value': i}
+                                         for i in columns],
+                                value=data.columns[0]
+                            ),
+                            html.H4('Selecciona la segunda columna (eje-y)',
+                                    style={'margin-top': '10px'}),
+                            dcc.Dropdown(
+                                id='yaxis-column',
+                                options=[{'label': i, 'value': i}
+                                         for i in columns],
+                                value=data.columns[3]
+                            ),
+
+                            dcc.Graph(id='linear_regression'),
+                            dcc.Graph(id='residual_plot'),
+                            dash_table.DataTable(id='regression_results'),
+                        ]),
+                    ]),
+                ]),
+            ]),
         ]),
     ], style={'padding': '20px'}
 )
@@ -130,7 +174,7 @@ def bi_dimensional_analysis(column1, column2):
     residual_plot = go.Figure()
     residual_plot.add_trace(go.Scatter(
         x=results.fittedvalues, y=residuals, mode='markers'))
-    residual_plot.update_layout(title='Residuals vs Fitted Values',
+    residual_plot.update_layout(title='Gráfico de Residuos',
                                 xaxis_title='Fitted Values', yaxis_title='Residuals')
 
     results_data = pd.DataFrame({
