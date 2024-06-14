@@ -24,13 +24,13 @@ data = load_data(data_path)
 
 layout = html.Div(
     children=[
-    html.H1('Inicio'),
-    dash_table.DataTable(
-        id='table',
-        columns=[{"name": i, "id": i} for i in data.columns],
-        data=data.to_dict('records'),
-        page_size=20,
-        style_table={'overflowX': 'auto'},        
-    ),
+        html.H1('Inicio'),
+        dash_table.DataTable(
+            id='table',
+            columns=[{"name": i, "id": i} for i in data.columns],
+            data=data.to_dict('records'),
+            page_size=20,
+            style_table={'overflowX': 'auto'},
+        ),
     ], style={'padding': '20px'}
 )

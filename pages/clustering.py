@@ -1,11 +1,9 @@
 import dash
 import pandas as pd
-from dash import html, dcc, callback, dash_table
-import plotly.express as px
+from dash import html, dcc, callback
 from dash.dependencies import Input, Output
 
 from sklearn.decomposition import PCA
-import statsmodels.api as sm
 import plotly.graph_objects as go
 import numpy as np
 from sklearn.cluster import KMeans
@@ -110,8 +108,6 @@ def kmeans_clustering_3d(data, columns):
 
     return fig
 
-
-# Layout:
 layout = html.Div(
     children=[
         html.Div([
@@ -119,7 +115,6 @@ layout = html.Div(
 
             dbc.Tabs([
                 dbc.Tab(label='Método del codo', children=[
-                    # dbc.Graph(id='kmeans'),
                     dbc.Card([
                         dbc.CardBody([
                             html.H3('Método del codo', style={
@@ -145,17 +140,12 @@ layout = html.Div(
     ], style={'padding': '20px'}
 )
 
-
-# calculate via the elbow method the optimal number of clusters
 @callback(
     Output('elbow_method', 'figure'),
     Input('elbow_method', 'id')
 )
 def update_graph(id):
     return elbow_method(data, columns)
-
-# calculate the kmeans clustering
-
 
 @callback(
     Output('kmeans', 'figure'),

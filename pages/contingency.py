@@ -10,27 +10,11 @@ dash.register_page(__name__, name='Tabla de Contingencia', order=3)
 
 data_path = 'data/HR_Analytics.csv'
 
-
-# def load_data(file_path):
-#     try:
-#         data = pd.read_csv(file_path)
-#         return data
-#     except FileNotFoundError:
-#         print(f"File not found: {file_path}")
-#         return None
-#     except Exception as e:
-#         print(f"Error occurred: {e}")
-#         return None
-
-
-# data = load_data(data_path)
-
 df = pd.read_csv(data_path, sep=';')
 
 columns = ['Attrition', 'BusinessTravel', 'Department', 'Education', 'JobLevel', 'EducationField', 'EnvironmentSatisfaction', 'Gender',
            'JobInvolvement', 'JobRole', 'JobSatisfaction', 'MaritalStatus', 'OverTime', 'RelationshipSatisfaction', 'WorkLifeBalance']
 
-# Layout:
 layout = html.Div(
     children=[
         html.Div([
@@ -86,14 +70,6 @@ def update_table(xaxis_column_name, yaxis_column_name):
 def update_statistics(xaxis_column_name, yaxis_column_name):
     contingency = pd.crosstab(df[xaxis_column_name], df[yaxis_column_name])
     chi2, p, dof, expected = chi2_contingency(contingency)
-
-    # n = contingency.sum().sum()
-    #Calculate Pearson's C
-    # c = np.sqrt(chi2 / (chi2 + n))
-    #Calculate Tschuprow's T
-    # r, k = contingency.shape
-    # t = np.sqrt((chi2 / (chi2 + n)) * (1 - (r - 1) * (k - 1) / (n - 1)))
-    # t = np.sqrt(chi2 / (n*(min(r, k) - 1)))
 
     C = association(contingency, method="pearson")
     T = association(contingency, method="tschuprow")

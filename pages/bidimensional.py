@@ -31,7 +31,6 @@ data = load_data(data_path)
 columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike',
            'TotalWorkingYears', 'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager']
 
-# Layout:
 layout = html.Div(
     children=[
         html.Div([
@@ -51,13 +50,14 @@ layout = html.Div(
                 dbc.Tab(label='Mapa de Calor', children=[
                     dbc.Card([
                         dbc.CardBody([
-                            
-                            html.H3('Mapa de calor',  style={'margin-top': '20px'}),
+
+                            html.H3('Mapa de calor',  style={
+                                    'margin-top': '20px'}),
 
                             html.H4('Seleccina la primera columna (eje-x)',
                                     style={'margin-top': '10px'}),
                             dcc.Dropdown(
-                                id='xaxis-column',
+                                id='heatmap-xaxis-column',
                                 options=[{'label': i, 'value': i}
                                          for i in columns],
                                 value=data.columns[0]
@@ -65,7 +65,7 @@ layout = html.Div(
                             html.H4('Selecciona la segunda columna (eje-y)',
                                     style={'margin-top': '10px'}),
                             dcc.Dropdown(
-                                id='yaxis-column',
+                                id='heatmap-yaxis-column',
                                 options=[{'label': i, 'value': i}
                                          for i in columns],
                                 value=data.columns[3]
@@ -75,10 +75,12 @@ layout = html.Div(
                         ]),
                     ]),
                 ]),
+
                 dbc.Tab(label='Regresión Lineal', children=[
                     dbc.Card([
                         dbc.CardBody([
-                            html.H3('Regresión lineal',  style={'margin-top': '20px'}),
+                            html.H3('Regresión lineal',  style={
+                                    'margin-top': '20px'}),
 
                             html.H4('Seleccina la primera columna (eje-x)',
                                     style={'margin-top': '10px'}),
@@ -112,9 +114,8 @@ layout = html.Div(
 
 
 @callback(
-    [Output('correlation', 'figure'), Output('heatmap', 'figure'), Output('linear_regression', 'figure'), Output(
-        'regression_results', 'data'), Output('regression_results', 'columns'), Output('residual_plot', 'figure')],
-    [Input('xaxis-column', 'value'), Input('yaxis-column', 'value')]
+    [Output('correlation', 'figure'), Output('heatmap', 'figure')],
+    [Input('heatmap-xaxis-column', 'value'), Input('heatmap-yaxis-column', 'value')]
 )
 def bi_dimensional_analysis(column1, column2):
 
@@ -153,7 +154,15 @@ def bi_dimensional_analysis(column1, column2):
     heatmap_fig = px.density_heatmap(
         data, x=column1, y=column2, marginal_x="histogram", marginal_y="histogram")
 
-    # Linear regression
+    return correlation_fig, heatmap_fig
+
+
+@callback(
+    [Output('linear_regression', 'figure'), Output('regression_results', 'data'), Output(
+        'regression_results', 'columns'), Output('residual_plot', 'figure')],
+    [Input('xaxis-column', 'value'), Input('yaxis-column', 'value')]
+)
+def linear_regression(column1, column2):
     linear_regression = px.scatter(
         data, x=column1, y=column2, opacity=0.65,
         trendline='ols', trendline_color_override='darkblue'
@@ -185,4 +194,4 @@ def bi_dimensional_analysis(column1, column2):
     res_data = results_data.to_dict('records')
     res_columns = [{"name": i, "id": i} for i in results_data.columns]
 
-    return correlation_fig, heatmap_fig, linear_regression, res_data, res_columns, residual_plot
+    return linear_regression, res_data, res_columns, residual_plot
