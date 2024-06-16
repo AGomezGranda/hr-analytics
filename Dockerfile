@@ -1,7 +1,5 @@
 FROM python:3.11-slim
 
-ENV DASH_DEBUG_MODE True
-
 WORKDIR /app
 
 ADD . /app
