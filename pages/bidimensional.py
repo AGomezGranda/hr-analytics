@@ -110,8 +110,6 @@ layout = html.Div(
     ], style={'padding': '20px'}
 )
 
-# Callbacks:
-
 
 @callback(
     [Output('correlation', 'figure'), Output('heatmap', 'figure')],

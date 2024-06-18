@@ -26,7 +26,6 @@ data = load_data(data_path)
 columns = ['Age', 'DailyRate', 'DistanceFromHome', 'HourlyRate', 'MonthlyIncome', 'MonthlyRate', 'NumCompaniesWorked', 'PercentSalaryHike',
            'TotalWorkingYears', 'TrainingTimesLastYear', 'YearsAtCompany', 'YearsInCurrentRole', 'YearsSinceLastPromotion', 'YearsWithCurrManager']
 
-#Layout:
 layout = html.Div(
     children=[
         html.H1('Análisis Unidimensional'),
@@ -49,7 +48,6 @@ layout = html.Div(
     ], style={'padding': '20px'}
 )
 
-# Callbacks:
 @callback(
     [Output('table', 'data'), Output('table', 'columns'), Output('histogram', 'figure'), Output(
         'box_fig_outliers', 'figure'), Output('box_fig_strip', 'figure')],
