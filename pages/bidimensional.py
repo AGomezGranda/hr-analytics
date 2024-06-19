@@ -186,7 +186,7 @@ def linear_regression(column1, column2):
 
     results_data = pd.DataFrame({
         'Métrica': ['R2', 'P-value'],
-        'Valor': [results.rsquared, results.f_pvalue]
+        'Valor': [results.rsquared.round(4), results.f_pvalue.round(4)]
     })
 
     res_data = results_data.to_dict('records')

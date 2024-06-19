@@ -157,6 +157,18 @@ def kmeans_clustering_3d(data, columns):
         name='Centroides'
     ))
 
+    variance_ratio = pca.explained_variance_ratio_
+    for i, ratio in enumerate(variance_ratio):
+        fig.add_annotation(
+            x=i / (n_components - 1),
+            y=1.1,
+            text=f'Componente {i + 1}: {ratio:.2%}',
+            showarrow=False,
+            xref='paper',
+            yref='paper'
+        )
+
+
     fig.update_layout(
         scene=dict(
             xaxis_title='Dim 1',
@@ -188,7 +200,8 @@ layout = html.Div(
                             html.H3('Gráfico bidimensional Clusters',
                                     style={'margin-top': '20px'}),
                             dcc.Graph(id='kmeans'),
-                            html.H4('Características de los Clusters'),
+                            html.H4('Características de los Clusters',
+                                    style={'margin-top': '20px'}),
                             dash_table.DataTable(
                                 id='kmeans-table',
                                 columns=[{'name': col, 'id': col}

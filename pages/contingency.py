@@ -70,6 +70,7 @@ def update_table(xaxis_column_name, yaxis_column_name):
 def update_statistics(xaxis_column_name, yaxis_column_name):
     contingency = pd.crosstab(df[xaxis_column_name], df[yaxis_column_name])
     chi2, p, dof, expected = chi2_contingency(contingency)
+    p = round(p, 6)
 
     C = association(contingency, method="pearson")
     T = association(contingency, method="tschuprow")
@@ -79,6 +80,8 @@ def update_statistics(xaxis_column_name, yaxis_column_name):
         'Valor': [chi2, C, T],
         'P-valor': [p, 'n/a', 'n/a']
     })
+    results['Valor'] = results['Valor'].round(4)
+
     columns = [{"name": i, "id": i} for i in results.columns]
     data = results.to_dict('records')
     return data, columns
