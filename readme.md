@@ -6,11 +6,15 @@ HR Analytics is my Capstone project for my Bussiness Administration degree. It c
 
 This application is developed in Python and uses libraries like Plotly Dash, Numpy and Pandas. Also scikit-learn is used for the Machine Learning K-means clustering model.
 
+## Project Abstract
+
+In this project, a dashboard is developed and deployed through a web application that allows the statistical analysis of business data. Specifically, this work shows the application for the study of a company's HR database. This public and easily accessible application is developed using Python and allows the performance of a one-dimensional and two-dimensional analysis. In addition, the k-means clustering model, a machine learning technique, has been applied to extract relevant information.
+
 ## Access the Application
 
 The application is hosted on AWS and can be accessed by clicking the link below:
 
-[HR Analytics Application]()
+[HR Analytics Application](http://52.208.98.11:8050/)
 
 It has been deployed using Docker and AWS ECS Fargate.
 
