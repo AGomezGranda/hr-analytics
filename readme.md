@@ -14,7 +14,7 @@ In this project, a dashboard is developed and deployed through a web application
 
 The application is hosted on AWS and can be accessed by clicking the link below:
 
-[HR Analytics Application](http://34.245.20.6:8050/)
+[HR Analytics Application](http://3.252.69.105:8050/)
 
 It has been deployed using Docker and AWS ECS Fargate.
 
